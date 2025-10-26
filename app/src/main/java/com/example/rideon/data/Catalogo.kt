@@ -15,7 +15,7 @@ object Catalogo {
             year = 2021,
             priceClp = 8_990_000,
             stock = 3,
-            imageRes = android.R.drawable.ic_menu_report_image, // agrega kawasaki_z900.webp/jpg en drawable
+            imageRes = R.drawable.z900,
             description = "Naked deportiva de 4 cilindros con chasis trellis y postura cómoda para ciudad y carretera.",
             engine = "948 cc",
             powerHp = 125,
@@ -28,10 +28,23 @@ object Catalogo {
             year = 2022,
             priceClp = 7_990_000,
             stock = 4,
-            imageRes = android.R.drawable.ic_menu_report_image, // agrega kawa_ninja650.webp/jpg
+            imageRes = R.drawable.ninja650,
             description = "Carenada ágil y versátil; perfecta para uso diario y paseos cortos.",
             engine = "649 cc",
             powerHp = 68,
+            abs = true
+        ),
+        ProductoUi(
+            id = 9,
+            brand = "Kawasaki",
+            model = "Ninja H2R",
+            year = 2023,
+            priceClp = 59_990_000, // precio de referencia aprox. en Chile
+            stock = 1,
+            imageRes = R.drawable.h2r,
+            description = "Diseñada para circuito, con aerodinámica de fibra de carbono y rendimiento extremo. ",
+            engine = "998 cc sobrealimentado",
+            powerHp = 310,
             abs = true
         ),
 
@@ -43,7 +56,7 @@ object Catalogo {
             year = 2020,
             priceClp = 10_990_000,
             stock = 2,
-            imageRes = android.R.drawable.ic_menu_report_image,// agrega bmw_f900r.webp/jpg
+            imageRes = R.drawable.f900r,
             description = "Roadster dinámica con electrónica moderna y gran manejo en curvas.",
             engine = "895 cc",
             powerHp = 105,
@@ -56,7 +69,7 @@ object Catalogo {
             year = 2023,
             priceClp = 19_990_000,
             stock = 1,
-            imageRes = android.R.drawable.ic_menu_report_image,// agrega bmw_r1250gs.webp/jpg
+            imageRes = R.drawable.r1250gs,
             description = "Adventure icónica bóxer, ideal para rutas largas y caminos mixtos.",
             engine = "1254 cc",
             powerHp = 136,
@@ -71,7 +84,7 @@ object Catalogo {
             year = 2021,
             priceClp = 7_890_000,
             stock = 5,
-            imageRes = R.drawable.mt07, // ya la tienes: mt07.jpg -> R.drawable.mt07
+            imageRes = R.drawable.mt07,
             description = "Hyper naked compacta, torque amigable y bajo peso. Excelente para ciudad y paseos.",
             engine = "689 cc",
             powerHp = 73,
@@ -84,7 +97,7 @@ object Catalogo {
             year = 2022,
             priceClp = 9_990_000,
             stock = 2,
-            imageRes = android.R.drawable.ic_menu_report_image, // agrega yamaha_r7.webp/jpg
+            imageRes = R.drawable.r7,
             description = "Supersport accesible con chasis afinado y postura deportiva.",
             engine = "689 cc",
             powerHp = 73,
@@ -99,25 +112,12 @@ object Catalogo {
             year = 2022,
             priceClp = 6_290_000,
             stock = 6,
-            imageRes = android.R.drawable.ic_menu_report_image, // agrega honda_cb500f.webp/jpg
+            imageRes = R.drawable.cb500f,
             description = "Naked intermedia muy equilibrada en consumo, peso y comodidad.",
             engine = "471 cc",
             powerHp = 47,
             abs = true
         ),
-        ProductoUi(
-            id = 8,
-            brand = "Honda",
-            model = "Africa Twin CRF1100L",
-            year = 2024,
-            priceClp = 17_990_000,
-            stock = 1,
-            imageRes = android.R.drawable.ic_menu_report_image, // agrega honda_africa_twin.webp/jpg
-            description = "Trail de largo aliento con electrónica avanzada y ergonomía off-road.",
-            engine = "1084 cc",
-            powerHp = 101,
-            abs = true
-        )
     )
 
     fun byId(id: Int): ProductoUi? = productos.firstOrNull { it.id == id }
