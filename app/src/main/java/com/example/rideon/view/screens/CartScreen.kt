@@ -1,6 +1,7 @@
 package com.example.rideon.view.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -96,13 +100,23 @@ fun CartItemRow(item: CartItem, onRemove: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            Surface(
-                modifier = Modifier.size(80.dp),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            ) {
-                // Aquí iría un componente como AsyncImage para cargar la imagen real
-
+            val resId = item.imageUrl.toIntOrNull()
+            if (resId != null) {
+                Image(
+                    painter = painterResource(id = resId),
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                // Fallback si no se puede parsear el id
+                Surface(
+                    modifier = Modifier.size(80.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                ) {}
             }
 
 
