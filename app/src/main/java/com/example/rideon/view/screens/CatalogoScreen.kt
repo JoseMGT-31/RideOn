@@ -14,17 +14,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
 import java.util.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogoScreen(
     productos: List<ProductoUi>,
-    onOpen: (ProductoUi) -> Unit
+    onOpen: (ProductoUi) -> Unit,
+    onOpenCart: () -> Unit
 ) {
     val nf = NumberFormat.getCurrencyInstance(Locale("es","CL"))
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("rideON • Catálogo") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("rideON • Catálogo") },
+                actions = {
+                    IconButton(onClick = onOpenCart) {
+                        Icon(
+                            imageVector = Icons.Filled.ShoppingCart,
+                            contentDescription = "Abrir carrito"
+                        )
+                    }
+                }
+            )
+        }
     ) { p ->
         LazyColumn(
             contentPadding = p,
