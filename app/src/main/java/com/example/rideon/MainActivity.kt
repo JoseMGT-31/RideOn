@@ -3,45 +3,38 @@ package com.example.rideon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+import com.example.rideon.data.Catalogo
 import com.example.rideon.ui.theme.RideOnTheme
+import com.example.rideon.view.screens.CatalogoScreen
+import com.example.rideon.view.screens.ProductoScreen
+import com.example.rideon.view.screens.ProductoUi
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             RideOnTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                // estado simple: null = estoy en catálogo; !=null = estoy en detalle
+                var seleccionado by remember { mutableStateOf<ProductoUi?>(null) }
+
+                if (seleccionado == null) {
+                    CatalogoScreen(
+                        productos = Catalogo.productos,
+                        onOpen = { p -> seleccionado = p } // abrir detalle
+                    )
+                } else {
+                    ProductoScreen(
+                        producto = seleccionado!!,
+                        onBack = { seleccionado = null },      // volver al catálogo
+                        onAddToCart = { qty ->
+                            // por ahora solo mostramos en consola
+                            println("Agregaste $qty ${seleccionado!!.model} al carrito")
+                        }
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RideOnTheme {
-        Greeting("Android")
     }
 }
