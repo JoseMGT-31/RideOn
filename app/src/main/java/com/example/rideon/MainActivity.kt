@@ -113,7 +113,7 @@ fun AppNav() {
                                     name = "${producto.brand} ${producto.model}",
                                     price = producto.priceClp.toDouble(),
                                     quantity = qty,
-                                    imageUrl = producto.imageRes
+                                    imageUrl = producto.imageRes.toString()
                                 )
                             )
                         }
