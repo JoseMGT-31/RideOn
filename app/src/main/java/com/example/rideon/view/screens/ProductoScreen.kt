@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -22,26 +21,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.rideon.R
 import java.text.NumberFormat
 import java.util.*
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
+import com.example.rideon.model.ProductoUi
 
 
-data class ProductoUi(
-    val id: Int,
-    val brand: String,
-    val model: String,
-    val year: Int,
-    val priceClp: Int,
-    val stock: Int,
-    val imageRes: Int,
-    val description: String,
-    val engine: String,
-    val powerHp: Int,
-    val abs: Boolean
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

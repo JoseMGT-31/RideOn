@@ -1,12 +1,19 @@
 package com.example.rideon.viewmodel
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rideon.data.RideOnDatabase
 import com.example.rideon.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -40,12 +47,46 @@ data class RegisterErrors(
     val confirm: String? = null
 )
 
+// ------------------ SessionManager (DataStore) ------------------
+private val Context.dataStore by preferencesDataStore("session_prefs")
+
+class SessionManager(private val context: Context) {
+    companion object {
+        private val KEY_LOGGED_IN = booleanPreferencesKey("logged_in")
+        private val KEY_EMAIL     = stringPreferencesKey("email")
+        private val KEY_NAME      = stringPreferencesKey("name")
+        private val KEY_ROLE      = stringPreferencesKey("role")
+    }
+
+    val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { it[KEY_LOGGED_IN] ?: false }
+    val userEmail: Flow<String?>  = context.dataStore.data.map { it[KEY_EMAIL] }
+    val userName: Flow<String?>   = context.dataStore.data.map { it[KEY_NAME] }
+    val userRole: Flow<String?>   = context.dataStore.data.map { it[KEY_ROLE] }
+    val isAdmin: Flow<Boolean>    = userRole.map { it == "ADMIN" }
+
+    suspend fun saveSession(name: String, email: String, role: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_LOGGED_IN] = true
+            prefs[KEY_EMAIL] = email
+            prefs[KEY_NAME] = name
+            prefs[KEY_ROLE] = role
+        }
+    }
+
+    suspend fun clearSession() {
+        context.dataStore.edit { it.clear() }
+    }
+}
+
+// ------------------ Auth ViewModel ------------------
 class Auth(application: Application) : AndroidViewModel(application) {
 
     private val repo: UserRepository by lazy {
         val db = RideOnDatabase.getDatabase(application)
         UserRepository(db.userDao())
     }
+
+    private val session by lazy { SessionManager(getApplication()) }
 
     // LOGIN
     private val _loginState = MutableStateFlow(LoginUiState())
@@ -85,13 +126,15 @@ class Auth(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _loginState.update { it.copy(isSubmitting = true, errorGlobal = null) }
             val result = repo.login(s.email, s.password)
-            result.onSuccess {
+            result.onSuccess { user ->
+                // ← Guarda sesión con rol
+                session.saveSession(user.name, user.email, user.role)
+                _loginState.update { it.copy(isSubmitting = false) }
                 onSuccess()
             }.onFailure { e ->
-                _loginState.update { it.copy(errorGlobal = e.message ?: "Error al iniciar sesión") }
+                _loginState.update { it.copy(errorGlobal = e.message ?: "Error al iniciar sesión", isSubmitting = false) }
                 onFailure(_loginState.value.errorGlobal!!)
             }
-            _loginState.update { it.copy(isSubmitting = false) }
         }
     }
 
@@ -133,12 +176,26 @@ class Auth(application: Application) : AndroidViewModel(application) {
             _registerState.update { it.copy(isSubmitting = true, errorGlobal = null) }
             val result = repo.register(s.name, s.email, s.password)
             result.onSuccess {
+                // ← Recién registrado: siempre CLIENT
+                session.saveSession(s.name, s.email, "CLIENT")
+                _registerState.update { it.copy(isSubmitting = false) }
                 onSuccess()
             }.onFailure { e ->
-                _registerState.update { it.copy(errorGlobal = e.message ?: "No se pudo registrar") }
+                _registerState.update { it.copy(errorGlobal = e.message ?: "No se pudo registrar", isSubmitting = false) }
                 onFailure(_registerState.value.errorGlobal!!)
             }
-            _registerState.update { it.copy(isSubmitting = false) }
+        }
+    }
+
+    // ------- Sesión / rol expuesto a UI -------
+    fun isLoggedInFlow(): Flow<Boolean> = session.isLoggedIn
+    fun isAdminFlow(): Flow<Boolean> = session.isAdmin
+    fun userRoleFlow(): Flow<String?> = session.userRole
+
+    fun logout(onDone: () -> Unit) {
+        viewModelScope.launch {
+            session.clearSession()
+            onDone()
         }
     }
 
