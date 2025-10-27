@@ -1,7 +1,7 @@
 package com.example.rideon.data
 
+import com.example.rideon.model.ProductoUi
 import com.example.rideon.R
-import com.example.rideon.view.screens.ProductoUi
 
 object Catalogo {
 
