@@ -28,6 +28,11 @@ import com.example.rideon.model.CartItem
 import com.example.rideon.view.screens.CartScreen
 import com.example.rideon.view.screens.ProductoScreen
 import com.example.rideon.viewmodel.CartViewModel
+import com.example.rideon.view.screens.DashboardScreen
+import com.example.rideon.view.screens.ProfileScreen
+import com.example.rideon.ui.screens.OrderHistoryScreen
+import com.example.rideon.view.screens.InventarioFormScreen
+import com.example.rideon.viewmodel.InventarioViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,24 +63,34 @@ fun AppNav() {
                 )
             }
 
-            // Login -> al loguear, ir a catalogo y limpiar back stack
+
             composable("login") {
                 LoginScreen(
                     onLoggedIn = {
-                        navController.navigate("catalogo") {
-                            popUpTo("home") { inclusive = true } // quita home del back stack
+                        navController.navigate("dashboard") { // CAMBIO: Navega a dashboard
+                            popUpTo("home") { inclusive = true }
                             launchSingleTop = true
                         }
                     }
                 )
             }
 
-            // Register -> al registrar, podrías volver o ir a login/catálogo (a elección)
+
             composable("register") {
                 RegisterScreen(
                     onRegistered = {
-                        navController.popBackStack()
+                        navController.navigate("dashboard") { // CAMBIO: Navega a dashboard
+                            popUpTo("home") { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
+                )
+            }
+
+            // Dashboard (Nueva pantalla principal después del login)
+            composable("dashboard") {
+                DashboardScreen(
+                    onNavigateTo = { route -> navController.navigate(route) }
                 )
             }
 
@@ -92,7 +107,7 @@ fun AppNav() {
                 )
             }
 
-
+            // Detalle del producto
             composable(
                 route = "detalle/{id}",
                 arguments = listOf(
@@ -128,10 +143,31 @@ fun AppNav() {
                 }
             }
 
+            // Carrito
             composable("cart") {
                 CartScreen(
-                    navController = navController, // <--- ¡ESTA ES LA LÍNEA QUE FALTA!
+                    navController = navController,
                     cartViewModel = cartViewModel
+                )
+            }
+
+            // Perfil
+            composable("profile") {
+                ProfileScreen()
+            }
+
+            // Historial de Órdenes
+            composable("history") {
+                OrderHistoryScreen()
+            }
+
+            // Gestión de Inventario (Ruta para Administradores)
+            composable("inventarioForm") {
+                InventarioFormScreen(
+                    vm = viewModel<InventarioViewModel>(),
+                    defaultImageRes = R.drawable.z900, // Usando la imagen de la Z900 como ejemplo de imagen por defecto
+                    onSaved = { navController.popBackStack() },
+                    onBack = { navController.popBackStack() }
                 )
             }
         }
