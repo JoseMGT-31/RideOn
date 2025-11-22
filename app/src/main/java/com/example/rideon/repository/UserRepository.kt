@@ -1,5 +1,6 @@
 package com.example.rideon.repository
 
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.rideon.data.UserDao
 import com.example.rideon.model.UserEntity
 
@@ -11,7 +12,7 @@ class UserRepository(private val dao: UserDao) {
         if (existing != null) {
             return Result.failure(IllegalStateException("El email ya está registrado"))
         }
-
+        val hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray())
         // Insertar datos
         dao.insertUser(UserEntity(name = name, email = email, password = password))
         return Result.success(Unit)
@@ -19,10 +20,22 @@ class UserRepository(private val dao: UserDao) {
 
     suspend fun login(email: String, password: String): Result<UserEntity> {
         val user = dao.getUserByEmail(email)
+        if (user == null) {
+            return Result.failure(IllegalArgumentException("Usuario no encontrado"))
+        }
+
+
+        val isVerifiedByBCrypt = BCrypt.verifyer().verify(password.toCharArray(), user.password.toCharArray()).verified
+
+
+        val isVerifiedByPlainText = user.password == password
+
         return when {
-            user == null -> Result.failure(IllegalArgumentException("Usuario no encontrado"))
-            user.password != password -> Result.failure(IllegalArgumentException("Contraseña incorrecta"))
-            else -> Result.success(user)
+
+            isVerifiedByBCrypt || isVerifiedByPlainText -> {
+                Result.success(user)
+            }
+            else -> Result.failure(IllegalArgumentException("Contraseña incorrecta"))
         }
     }
 }
