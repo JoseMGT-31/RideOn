@@ -129,7 +129,10 @@ fun AppNav() {
             }
 
             composable("cart") {
-                CartScreen(cartViewModel = cartViewModel)
+                CartScreen(
+                    navController = navController, // <--- ¡ESTA ES LA LÍNEA QUE FALTA!
+                    cartViewModel = cartViewModel
+                )
             }
         }
     }
