@@ -2,9 +2,11 @@ package com.example.rideon.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import com.example.rideon.R
 
 @Composable
@@ -83,6 +87,54 @@ fun HomeAuthScreen(
                     .height(56.dp)
             ) {
                 Text("Registrarse", color = Color.White, fontSize = 18.sp)
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            // Texto para redirigir a registro
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "¿No tienes cuenta? ",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = "Regístrate aquí",
+                    color = Color.Cyan,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable { onRegister() }
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            // Texto para redirigir a login
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "¿Ya tienes cuenta? ",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = "Inicia sesión",
+                    color = Color.Cyan,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.clickable { onLogin() }
+                )
             }
 
             Spacer(Modifier.height(24.dp))

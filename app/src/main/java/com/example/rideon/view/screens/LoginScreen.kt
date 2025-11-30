@@ -3,6 +3,7 @@ package com.example.rideon.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,11 +26,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rideon.R
 import com.example.rideon.viewmodel.Auth
 import kotlinx.coroutines.launch
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.text.TextStyle
 
 
@@ -166,11 +169,22 @@ fun LoginScreen(
                 }
 
                 // Link a registro
-                TextButton(
-                    onClick = onGoRegister,
-                    modifier = Modifier.padding(top = 8.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("¿No tienes cuenta? Regístrate", color = Color.White)
+                    Text(text = "¿No tienes cuenta? ", color = Color.White, fontSize = 14.sp)
+                    Text(
+                        text = "Regístrate",
+                        color = Color.Cyan,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.clickable { onGoRegister() }
+                    )
                 }
             }
         }

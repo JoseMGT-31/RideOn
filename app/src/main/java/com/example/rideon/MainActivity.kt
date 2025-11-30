@@ -10,6 +10,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,6 +36,7 @@ import com.example.rideon.view.screens.ProfileScreen
 import com.example.rideon.ui.screens.OrderHistoryScreen
 import com.example.rideon.view.screens.InventarioFormScreen
 import com.example.rideon.viewmodel.InventarioViewModel
+import com.example.rideon.viewmodel.Auth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +54,19 @@ fun AppNav() {
     RideOnTheme {
         val navController = rememberNavController()
         val cartViewModel: CartViewModel = viewModel()
+        // Observa el estado de sesión para redirigir automáticamente si ya está logueado
+        val auth: Auth = viewModel()
+        val isLoggedIn by auth.isLoggedInFlow().collectAsState(initial = false)
+
+        // Si el usuario ya está logueado, navega a dashboard al iniciar la composición
+        LaunchedEffect(key1 = isLoggedIn) {
+            if (isLoggedIn) {
+                navController.navigate("dashboard") {
+                    popUpTo("home") { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
 
         NavHost(
             navController = navController,
@@ -71,7 +88,8 @@ fun AppNav() {
                             popUpTo("home") { inclusive = true }
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    onGoRegister = { navController.navigate("register") }
                 )
             }
 
@@ -83,7 +101,8 @@ fun AppNav() {
                             popUpTo("home") { inclusive = true }
                             launchSingleTop = true
                         }
-                    }
+                    },
+                    onGoLogin = { navController.navigate("login") }
                 )
             }
 
