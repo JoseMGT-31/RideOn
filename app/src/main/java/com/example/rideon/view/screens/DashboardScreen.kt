@@ -1,6 +1,5 @@
 package com.example.rideon.view.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,12 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.rideon.R
 import com.example.rideon.viewmodel.Auth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,16 +33,28 @@ fun DashboardScreen(
     val userName by vm.userRoleFlow().collectAsState(initial = null)
     val isAdmin by vm.isAdminFlow().collectAsState(initial = false)
 
+    // Paleta personalizada: rojo principal, gris oscuro y negro
+    val redPrimary = Color(0xFFD32F2F)       // rojo vivo para elementos destacados
+    val redDark = Color(0xFFB71C1C)          // rojo oscuro para appbar
+    val darkGray = Color(0xFF121212)         // fondo general (casi negro)
+    val cardGray = Color(0xFF1F1F1F)         // tarjetas ligeramente menos oscuras
+    val onDark = Color(0xFFFFFFFF)           // texto sobre fondos oscuros
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("rideON • Principal") },
+                title = { Text("rideON • Principal", color = onDark) },
                 actions = {
                     // Botón para cerrar sesión
                     IconButton(onClick = { vm.logout { onNavigateTo("home") } }) {
-                        Icon(Icons.Filled.Logout, contentDescription = "Cerrar sesión")
+                        Icon(Icons.Filled.Logout, contentDescription = "Cerrar sesión", tint = onDark)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = redDark,
+                    titleContentColor = onDark,
+                    actionIconContentColor = onDark
+                )
             )
         }
     ) { innerPadding ->
@@ -54,14 +62,14 @@ fun DashboardScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color.White)
+                .background(darkGray)
         ) {
             // Sección de Bienvenida
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(redPrimary),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -69,20 +77,20 @@ fun DashboardScreen(
                         text = "¡Bienvenido, ${userName ?: "Usuario"}!",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = onDark
                     )
                     if (isAdmin) {
                         Text(
                             text = "(Administrador)",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                            color = onDark.copy(alpha = 0.9f)
                         )
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = "Encuentra la moto de tus sueños.",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = onDark
                     )
                 }
             }
@@ -102,14 +110,20 @@ fun DashboardScreen(
                         icon = Icons.Filled.Store,
                         destination = "catalogo",
                         onNavigate = onNavigateTo,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        cardBackground = cardGray,
+                        iconTint = redPrimary,
+                        titleColor = onDark
                     )
                     NavCard(
                         title = "Mi Perfil",
                         icon = Icons.Filled.AccountCircle,
                         destination = "profile",
                         onNavigate = onNavigateTo,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        cardBackground = cardGray,
+                        iconTint = redPrimary,
+                        titleColor = onDark
                     )
                 }
 
@@ -123,14 +137,20 @@ fun DashboardScreen(
                         icon = Icons.Filled.ShoppingCart,
                         destination = "cart",
                         onNavigate = onNavigateTo,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        cardBackground = cardGray,
+                        iconTint = redPrimary,
+                        titleColor = onDark
                     )
                     NavCard(
                         title = "Mis Órdenes",
                         icon = Icons.Filled.ListAlt,
                         destination = "history",
                         onNavigate = onNavigateTo,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        cardBackground = cardGray,
+                        iconTint = redPrimary,
+                        titleColor = onDark
                     )
                 }
                 if (isAdmin) {
@@ -138,7 +158,7 @@ fun DashboardScreen(
                     Button(
                         onClick = { onNavigateTo("inventarioForm") },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF673AB7)) // Un color morado para admin
+                        colors = ButtonDefaults.buttonColors(containerColor = redDark, contentColor = onDark)
                     ) {
                         Text("Gestión de Inventario")
                     }
@@ -149,21 +169,24 @@ fun DashboardScreen(
 }
 
 
-
 @Composable
 fun NavCard(
     title: String,
     icon: ImageVector,
     destination: String,
     onNavigate: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardBackground: Color = Color(0xFF1F1F1F),
+    iconTint: Color = Color(0xFFD32F2F),
+    titleColor: Color = Color.White
 ) {
     Card(
         modifier = modifier
             .height(120.dp)
             .clickable { onNavigate(destination) },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = cardBackground)
     ) {
         Column(
             modifier = Modifier
@@ -176,13 +199,14 @@ fun NavCard(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = iconTint
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = titleColor
             )
         }
     }

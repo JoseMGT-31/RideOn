@@ -1,6 +1,7 @@
 package com.example.rideon.view.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,44 +33,62 @@ fun CartScreen(
     navController: NavController,
     cartViewModel: CartViewModel = viewModel()
 ) {
+    // Paleta compartida
+    val redPrimary = Color(0xFFD32F2F)
+    val redDark = Color(0xFFB71C1C)
+    val darkGray = Color(0xFF121212)
+    val cardGray = Color(0xFF1F1F1F)
+    val onDark = Color(0xFFFFFFFF)
+
     val uiState by cartViewModel.uiState.collectAsState()
     val snackbarHostState = androidx.compose.runtime.remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Mi Carrito") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Mi Carrito", color = onDark) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = redDark,
+                    titleContentColor = onDark,
+                    actionIconContentColor = onDark
+                )
+            )
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             if (uiState.items.isNotEmpty()) {
                 CartBottomBar(
                     total = uiState.total,
                     onConfirm = {
-
                         cartViewModel.confirmOrder(
                             onSuccess = {
                                 scope.launch {
                                     snackbarHostState.showSnackbar("¡Pedido confirmado!")
-                                    navController.navigate("history") // Navega al historial
+                                    navController.navigate("history")
                                 }
                             }
                         )
-                    }
+                    },
+                    redPrimary = redPrimary,
+                    cardGray = cardGray,
+                    onDark = onDark
                 )
             }
         }
     ) { innerPadding ->
         if (uiState.items.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize().padding(innerPadding).background(darkGray), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(Icons.Filled.ShoppingCart, null, Modifier.size(80.dp), tint = Color.Gray)
-                    Text("Carrito vacío")
-                    Button(onClick = { navController.navigate("catalogo") }) { Text("Ir al Catálogo") }
+                    Text("Carrito vacío", color = onDark)
+                    Button(onClick = { navController.navigate("catalogo") }, colors = ButtonDefaults.buttonColors(containerColor = redPrimary, contentColor = onDark)) { Text("Ir al Catálogo") }
                 }
             }
         } else {
-            LazyColumn(modifier = Modifier.padding(innerPadding).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            LazyColumn(modifier = Modifier.padding(innerPadding).padding(16.dp).background(darkGray), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 items(uiState.items) { item ->
-                    CartItemRow(item, onRemove = { cartViewModel.removeItem(item.id) })
+                    CartItemRow(item, onRemove = { cartViewModel.removeItem(item.id) }, cardGray = cardGray, onDark = onDark, redPrimary = redPrimary)
                 }
             }
         }
@@ -78,8 +97,8 @@ fun CartScreen(
 
 
 @Composable
-fun CartItemRow(item: CartItem, onRemove: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+fun CartItemRow(item: CartItem, onRemove: () -> Unit, cardGray: Color = Color(0xFF1F1F1F), onDark: Color = Color.White, redPrimary: Color = Color(0xFFD32F2F)) {
+    Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = cardGray)) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             val resId = item.imageUrl.toIntOrNull()
             if (resId != null) {
@@ -88,9 +107,9 @@ fun CartItemRow(item: CartItem, onRemove: () -> Unit) {
                 Surface(Modifier.size(80.dp), color = Color.LightGray, shape = MaterialTheme.shapes.medium) {}
             }
             Column(Modifier.weight(1f).padding(horizontal = 16.dp)) {
-                Text(item.name, style = MaterialTheme.typography.titleMedium)
-                Text("$ ${item.price.toInt()}", color = MaterialTheme.colorScheme.primary)
-                Text("Cant: ${item.quantity}", style = MaterialTheme.typography.bodySmall)
+                Text(item.name, style = MaterialTheme.typography.titleMedium, color = onDark)
+                Text("$ ${item.price.toInt()}", color = redPrimary)
+                Text("Cant: ${item.quantity}", style = MaterialTheme.typography.bodySmall, color = onDark)
             }
             IconButton(onClick = onRemove) { Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error) }
         }
@@ -98,14 +117,14 @@ fun CartItemRow(item: CartItem, onRemove: () -> Unit) {
 }
 
 @Composable
-fun CartBottomBar(total: Double, onConfirm: () -> Unit) {
-    Surface(shadowElevation = 8.dp) {
+fun CartBottomBar(total: Double, onConfirm: () -> Unit, redPrimary: Color = Color(0xFFD32F2F), cardGray: Color = Color(0xFF1F1F1F), onDark: Color = Color.White) {
+    Surface(shadowElevation = 8.dp, color = cardGray) {
         Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
-                Text("Total", style = MaterialTheme.typography.bodySmall)
-                Text("$ ${total.toInt()}", style = MaterialTheme.typography.headlineSmall)
+                Text("Total", style = MaterialTheme.typography.bodySmall, color = onDark)
+                Text("$ ${total.toInt()}", style = MaterialTheme.typography.headlineSmall, color = onDark)
             }
-            Button(onClick = onConfirm, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+            Button(onClick = onConfirm, colors = ButtonDefaults.buttonColors(containerColor = redPrimary, contentColor = onDark)) {
                 Text("Confirmar Pedido")
             }
         }

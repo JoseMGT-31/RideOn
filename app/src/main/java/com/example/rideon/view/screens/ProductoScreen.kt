@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +37,13 @@ fun ProductoScreen(
     onBack: () -> Unit,
     onAddToCart: (Int) -> Unit
 ) {
+    // Paleta
+    val redPrimary = Color(0xFFD32F2F)
+    val redDark = Color(0xFFB71C1C)
+    val darkGray = Color(0xFF121212)
+    val cardGray = Color(0xFF1F1F1F)
+    val onDark = Color(0xFFFFFFFF)
+
     val currency = remember { NumberFormat.getCurrencyInstance(Locale("es", "CL")) }
     var qty by remember { mutableStateOf(1) }
     val canBuy = producto.stock > 0
@@ -49,14 +57,16 @@ fun ProductoScreen(
                 title = {
                     Text(
                         "${producto.brand} ${producto.model}",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = onDark
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = onDark)
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = redDark, titleContentColor = onDark, navigationIconContentColor = onDark)
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -66,7 +76,7 @@ fun ProductoScreen(
                 .padding(inner)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(MaterialTheme.colorScheme.background)
+                .background(darkGray)
         ) {
             // Imagen principal con degradado inferior
             Box(
@@ -92,7 +102,7 @@ fun ProductoScreen(
                 )
                 Text(
                     text = "${producto.brand} ${producto.model}",
-                    color = Color.White,
+                    color = onDark,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -114,7 +124,7 @@ fun ProductoScreen(
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold,
                     ),
-                    color = Color.Black
+                    color = onDark
                 )
 
                 // Año y motor
@@ -127,21 +137,23 @@ fun ProductoScreen(
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Medium,
                         ),
-                        color = Color.Black
+                        color = onDark.copy(alpha = 0.9f)
                     )
                     Text(
                         "${producto.powerHp} HP",
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        color = onDark
                     )
                 }
 
-                Divider(thickness = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                Divider(thickness = 1.dp, color = cardGray)
 
                 // Descripción
                 Text(
                     text = producto.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
+                    color = onDark.copy(alpha = 0.95f)
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -168,7 +180,9 @@ fun ProductoScreen(
                     QuantityStepper(
                         value = qty,
                         onValueChange = { qty = it.coerceAtMost(producto.stock) },
-                        enabled = canBuy
+                        enabled = canBuy,
+                        redPrimary = redPrimary,
+                        onDark = onDark
                     )
 
                     Button(
@@ -185,7 +199,8 @@ fun ProductoScreen(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .height(48.dp)
-                            .fillMaxWidth(0.5f)
+                            .fillMaxWidth(0.5f),
+                        colors = ButtonDefaults.buttonColors(containerColor = redPrimary, contentColor = onDark)
                     ) {
                         Text(if (canBuy) "Agregar al carrito" else "Sin stock")
                     }
@@ -202,29 +217,34 @@ fun ProductoScreen(
 private fun QuantityStepper(
     value: Int,
     onValueChange: (Int) -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
+    redPrimary: Color = Color(0xFFD32F2F),
+    onDark: Color = Color.White
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedButton(
             onClick = { onValueChange((value - 1).coerceAtLeast(1)) },
             enabled = enabled && value > 1,
-            shape = RoundedCornerShape(8.dp)
-        ) { Text("-") }
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = onDark)
+        ) { Text("-", color = onDark) }
 
         Spacer(Modifier.width(8.dp))
         Text(
             "$value",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center,
-            modifier = Modifier.width(32.dp)
+            modifier = Modifier.width(32.dp),
+            color = onDark
         )
         Spacer(Modifier.width(8.dp))
 
         OutlinedButton(
             onClick = { onValueChange(value + 1) },
             enabled = enabled,
-            shape = RoundedCornerShape(8.dp)
-        ) { Text("+") }
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = onDark)
+        ) { Text("+", color = onDark) }
     }
 }
 

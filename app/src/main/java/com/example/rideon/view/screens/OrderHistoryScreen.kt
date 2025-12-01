@@ -17,14 +17,30 @@ import com.example.rideon.viewmodel.OrderHistoryUiState
 import com.example.rideon.viewmodel.OrderHistoryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.graphics.Color // Importar Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderHistoryScreen(viewModel: OrderHistoryViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
+    // Paleta
+    val redPrimary = Color(0xFFD32F2F)
+    val redDark = Color(0xFFB71C1C)
+    val darkGray = Color(0xFF121212)
+    val cardGray = Color(0xFF1F1F1F)
+    val onDark = Color(0xFFFFFFFF)
+    val secondaryText = Color(0xFFBDBDBD)
+
+
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Mi Historial de Compras") }) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Mi Historial de Compras", color = onDark) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = redDark, titleContentColor = onDark)
+            )
+        },
+        containerColor = darkGray // Fondo oscuro para la pantalla completa
     ) { innerPadding ->
         when {
             uiState.isLoading -> {
@@ -32,7 +48,7 @@ fun OrderHistoryScreen(viewModel: OrderHistoryViewModel = viewModel()) {
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(color = redPrimary) // Color visible para el indicador
                 }
             }
             uiState.orders.isEmpty() -> {
@@ -40,7 +56,7 @@ fun OrderHistoryScreen(viewModel: OrderHistoryViewModel = viewModel()) {
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Aún no has realizado ninguna compra.")
+                    Text("Aún no has realizado ninguna compra.", color = onDark) // Texto blanco
                 }
             }
             else -> {
@@ -50,7 +66,7 @@ fun OrderHistoryScreen(viewModel: OrderHistoryViewModel = viewModel()) {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(uiState.orders) { order ->
-                        OrderRow(order = order)
+                        OrderRow(order = order, cardColor = cardGray, titleColor = onDark, bodyColor = secondaryText, totalColor = redPrimary)
                     }
                 }
             }
@@ -59,24 +75,39 @@ fun OrderHistoryScreen(viewModel: OrderHistoryViewModel = viewModel()) {
 }
 
 @Composable
-fun OrderRow(order: Order) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+fun OrderRow(
+    order: Order,
+    cardColor: Color,
+    titleColor: Color,
+    bodyColor: Color,
+    totalColor: Color
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = cardColor) // Color de fondo de la tarjeta
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Pedido #${order.id}", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Pedido #${order.id}",
+                style = MaterialTheme.typography.titleMedium,
+                color = titleColor // Título blanco
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Fecha: ${order.date.toFormattedString()}",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                color = bodyColor // Texto secundario (gris claro)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Total: $${order.total.toInt()}",
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
+                color = totalColor // Total en rojo
             )
             Text(
                 text = "${order.itemCount} productos",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = bodyColor // Texto secundario (gris claro)
             )
         }
     }
@@ -87,10 +118,19 @@ fun Date.toFormattedString(): String {
     return formatter.format(this)
 }
 
+// Para que las Previews usen los nuevos colores
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, name = "Historial Lleno")
 @Composable
 fun OrderHistoryScreenPreview() {
+    // Paleta de Preview (duplicada para que la preview compile sin el VM)
+    val redPrimary = Color(0xFFD32F2F)
+    val redDark = Color(0xFFB71C1C)
+    val darkGray = Color(0xFF121212)
+    val cardGray = Color(0xFF1F1F1F)
+    val onDark = Color(0xFFFFFFFF)
+    val secondaryText = Color(0xFFBDBDBD)
+
     val previewOrders = listOf(
         Order(id = "ABC-123", date = Date(), total = 189990.0, itemCount = 1),
         Order(id = "DEF-456", date = Date(), total = 45980.0, itemCount = 2)
@@ -99,7 +139,11 @@ fun OrderHistoryScreenPreview() {
 
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Mi Historial de Compras") }) }
+        topBar = { TopAppBar(
+            title = { Text("Mi Historial de Compras", color = onDark) },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = redDark, titleContentColor = onDark)
+        ) },
+        containerColor = darkGray
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
@@ -107,7 +151,14 @@ fun OrderHistoryScreenPreview() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(previewState.orders) { order ->
-                OrderRow(order = order)
+                // Usar la función modificada con los colores de la paleta
+                OrderRow(
+                    order = order,
+                    cardColor = cardGray,
+                    titleColor = onDark,
+                    bodyColor = secondaryText,
+                    totalColor = redPrimary
+                )
             }
         }
     }
@@ -117,16 +168,25 @@ fun OrderHistoryScreenPreview() {
 @Preview(showBackground = true, name = "Historial Vacío")
 @Composable
 fun OrderHistoryScreenEmptyPreview() {
+    // Paleta de Preview (duplicada para que la preview compile sin el VM)
+    val redDark = Color(0xFFB71C1C)
+    val darkGray = Color(0xFF121212)
+    val onDark = Color(0xFFFFFFFF)
+
     val previewState = OrderHistoryUiState(orders = emptyList(), isLoading = false)
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Mi Historial de Compras") }) }
+        topBar = { TopAppBar(
+            title = { Text("Mi Historial de Compras", color = onDark) },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = redDark, titleContentColor = onDark)
+        ) },
+        containerColor = darkGray
     ) { innerPadding ->
         Box(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            Text("Aún no has realizado ninguna compra.")
+            Text("Aún no has realizado ninguna compra.", color = onDark)
         }
     }
 }
