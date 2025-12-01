@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.rideon.repository.UserRepositoryExtraTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-12-01T02:31:56.917Z" hostname="DESKTOP-B38LDPG" time="2.955">
+  <properties/>
+  <testcase name="register returns failure when email already exists" classname="com.example.rideon.repository.UserRepositoryExtraTest" time="2.073"/>
+  <testcase name="login returns failure when user not found" classname="com.example.rideon.repository.UserRepositoryExtraTest" time="0.009"/>
+  <testcase name="login accepts plain-text password if stored as plain" classname="com.example.rideon.repository.UserRepositoryExtraTest" time="0.1"/>
+  <testcase name="login fails with incorrect password" classname="com.example.rideon.repository.UserRepositoryExtraTest" time="0.764"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\Bekan\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.6\46e2545d7a97b6ccb195621650c5957279eb4812\byte-buddy-agent-1.14.6.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

@@ -25,6 +25,7 @@ data class LoginUiState(
     val submitEnabled: Boolean = false,
     val errorGlobal: String? = null
 )
+
 data class LoginErrors(
     val email: String? = null,
     val password: String? = null
@@ -40,6 +41,7 @@ data class RegisterUiState(
     val submitEnabled: Boolean = false,
     val errorGlobal: String? = null
 )
+
 data class RegisterErrors(
     val name: String? = null,
     val email: String? = null,
@@ -50,21 +52,32 @@ data class RegisterErrors(
 // ------------------ SessionManager (DataStore) ------------------
 private val Context.dataStore by preferencesDataStore("session_prefs")
 
-class SessionManager(private val context: Context) {
+interface SessionManagerType {
+    val isLoggedIn: Flow<Boolean>
+    val userEmail: Flow<String?>
+    val userName: Flow<String?>
+    val userRole: Flow<String?>
+    val isAdmin: Flow<Boolean>
+
+    suspend fun saveSession(name: String, email: String, role: String)
+    suspend fun clearSession()
+}
+
+class SessionManager(private val context: Context) : SessionManagerType {
     companion object {
         private val KEY_LOGGED_IN = booleanPreferencesKey("logged_in")
-        private val KEY_EMAIL     = stringPreferencesKey("email")
-        private val KEY_NAME      = stringPreferencesKey("name")
-        private val KEY_ROLE      = stringPreferencesKey("role")
+        private val KEY_EMAIL = stringPreferencesKey("email")
+        private val KEY_NAME = stringPreferencesKey("name")
+        private val KEY_ROLE = stringPreferencesKey("role")
     }
 
-    val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { it[KEY_LOGGED_IN] ?: false }
-    val userEmail: Flow<String?>  = context.dataStore.data.map { it[KEY_EMAIL] }
-    val userName: Flow<String?>   = context.dataStore.data.map { it[KEY_NAME] }
-    val userRole: Flow<String?>   = context.dataStore.data.map { it[KEY_ROLE] }
-    val isAdmin: Flow<Boolean>    = userRole.map { it == "ADMIN" }
+    override val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { it[KEY_LOGGED_IN] ?: false }
+    override val userEmail: Flow<String?> = context.dataStore.data.map { it[KEY_EMAIL] }
+    override val userName: Flow<String?> = context.dataStore.data.map { it[KEY_NAME] }
+    override val userRole: Flow<String?> = context.dataStore.data.map { it[KEY_ROLE] }
+    override val isAdmin: Flow<Boolean> = userRole.map { it == "ADMIN" }
 
-    suspend fun saveSession(name: String, email: String, role: String) {
+    override suspend fun saveSession(name: String, email: String, role: String) {
         context.dataStore.edit { prefs ->
             prefs[KEY_LOGGED_IN] = true
             prefs[KEY_EMAIL] = email
@@ -73,29 +86,45 @@ class SessionManager(private val context: Context) {
         }
     }
 
-    suspend fun clearSession() {
+    override suspend fun clearSession() {
         context.dataStore.edit { it.clear() }
     }
 }
 
 // ------------------ Auth ViewModel ------------------
-class Auth(application: Application) : AndroidViewModel(application) {
+class Auth : AndroidViewModel {
 
-    private val repo: UserRepository by lazy {
-        val db = RideOnDatabase.getDatabase(application)
-        UserRepository(db.userDao())
+    // Primary constructor used by runtime
+    constructor(application: Application) : super(application) {
+        this._repoOverride = null
+        this._sessionOverride = null
     }
 
-    private val session by lazy { SessionManager(getApplication()) }
+    // Secondary constructor for tests: allows injecting repo and session manager
+    constructor(application: Application, repoOverride: UserRepository?, sessionOverride: SessionManagerType?) : super(application) {
+        this._repoOverride = repoOverride
+        this._sessionOverride = sessionOverride
+    }
 
-    // LOGIN
+    private var _repoOverride: UserRepository? = null
+    private var _sessionOverride: SessionManagerType? = null
+
+    private val repo: UserRepository
+        get() = _repoOverride ?: run {
+            val db = RideOnDatabase.getDatabase(getApplication())
+            UserRepository(db.userDao())
+        }
+
+    private val session: SessionManagerType
+        get() = _sessionOverride ?: SessionManager(getApplication())
+
+    // State
     private val _loginState = MutableStateFlow(LoginUiState())
     val loginState: StateFlow<LoginUiState> = _loginState
 
     private val _loginErrors = MutableStateFlow(LoginErrors())
     val loginErrors: StateFlow<LoginErrors> = _loginErrors
 
-    // REGISTER
     private val _registerState = MutableStateFlow(RegisterUiState())
     val registerState: StateFlow<RegisterUiState> = _registerState
 
@@ -107,10 +136,12 @@ class Auth(application: Application) : AndroidViewModel(application) {
         _loginState.update { it.copy(email = v) }
         validateLogin()
     }
+
     fun onLoginPasswordChange(v: String) {
         _loginState.update { it.copy(password = v) }
         validateLogin()
     }
+
     private fun validateLogin() {
         val s = _loginState.value
         val errEmail = if (!isValidEmail(s.email)) "Email inválido" else null
@@ -127,13 +158,14 @@ class Auth(application: Application) : AndroidViewModel(application) {
             _loginState.update { it.copy(isSubmitting = true, errorGlobal = null) }
             val result = repo.login(s.email, s.password)
             result.onSuccess { user ->
-                // ← Guarda sesión con rol
+                // guarda sesión y notifica success
                 session.saveSession(user.name, user.email, user.role)
                 _loginState.update { it.copy(isSubmitting = false) }
                 onSuccess()
             }.onFailure { e ->
-                _loginState.update { it.copy(errorGlobal = e.message ?: "Error al iniciar sesión", isSubmitting = false) }
-                onFailure(_loginState.value.errorGlobal!!)
+                val msg = e.message ?: "Error al iniciar sesión"
+                _loginState.update { it.copy(errorGlobal = msg, isSubmitting = false) }
+                onFailure(msg)
             }
         }
     }
@@ -143,14 +175,17 @@ class Auth(application: Application) : AndroidViewModel(application) {
         _registerState.update { it.copy(name = v) }
         validateRegister()
     }
+
     fun onRegisterEmailChange(v: String) {
         _registerState.update { it.copy(email = v) }
         validateRegister()
     }
+
     fun onRegisterPasswordChange(v: String) {
         _registerState.update { it.copy(password = v) }
         validateRegister()
     }
+
     fun onRegisterConfirmChange(v: String) {
         _registerState.update { it.copy(confirm = v) }
         validateRegister()
@@ -163,9 +198,7 @@ class Auth(application: Application) : AndroidViewModel(application) {
         val errPass = if (s.password.length < 6) "Mínimo 6 caracteres" else null
         val errConfirm = if (s.confirm != s.password) "No coincide con la contraseña" else null
         _registerErrors.value = RegisterErrors(errName, errEmail, errPass, errConfirm)
-        _registerState.update {
-            it.copy(submitEnabled = listOf(errName, errEmail, errPass, errConfirm).all { e -> e == null })
-        }
+        _registerState.update { it.copy(submitEnabled = listOf(errName, errEmail, errPass, errConfirm).all { e -> e == null }) }
     }
 
     fun submitRegister(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
@@ -176,13 +209,13 @@ class Auth(application: Application) : AndroidViewModel(application) {
             _registerState.update { it.copy(isSubmitting = true, errorGlobal = null) }
             val result = repo.register(s.name, s.email, s.password)
             result.onSuccess {
-                // ← Recién registrado: siempre CLIENT
                 session.saveSession(s.name, s.email, "CLIENT")
                 _registerState.update { it.copy(isSubmitting = false) }
                 onSuccess()
             }.onFailure { e ->
-                _registerState.update { it.copy(errorGlobal = e.message ?: "No se pudo registrar", isSubmitting = false) }
-                onFailure(_registerState.value.errorGlobal!!)
+                val msg = e.message ?: "No se pudo registrar"
+                _registerState.update { it.copy(errorGlobal = msg, isSubmitting = false) }
+                onFailure(msg)
             }
         }
     }

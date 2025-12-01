@@ -1,0 +1,118 @@
+[
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-mdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_z900.png.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\z900.png"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_mt07.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\mt07.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-xhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_logo.png.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\logo.png"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_f900r.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\f900r.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_h2r.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\h2r.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_ninja650.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\ninja650.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\xml_file_paths.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\xml\\file_paths.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_r1250gs.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\r1250gs.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_logo_black.png.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\logo_black.png"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-mdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_cb500f.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\cb500f.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-hdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_bg_home.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\bg_home.jpg"
+    },
+    {
+        "merged": "com.example.rideon.app-debug-49:/xml_file_paths.xml.flat",
+        "source": "com.example.rideon.app-main-51:/xml/file_paths.xml"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-debug-49:\\drawable_r7.jpg.flat",
+        "source": "C:\\Users\\Bekan\\.gradle\\daemon\\8.13\\com.example.rideon.app-main-51:\\drawable\\r7.jpg"
+    }
+]

@@ -1,0 +1,12 @@
+# Ejemplo de key.properties (no commitees `key.properties` real)
+# Campos:
+# storeFile: ruta al keystore, relativa a la raíz del proyecto o absoluta
+# storePassword: contraseña del keystore
+# keyAlias: alias de la clave
+# keyPassword: contraseña de la clave (puede ser igual a storePassword)
+
+storeFile=keystores/mi-release-key.jks
+storePassword=changeit
+keyAlias=mi_alias
+keyPassword=changeit
+

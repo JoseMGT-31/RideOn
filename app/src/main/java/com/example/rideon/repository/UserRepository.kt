@@ -12,9 +12,10 @@ class UserRepository(private val dao: UserDao) {
         if (existing != null) {
             return Result.failure(IllegalStateException("El email ya está registrado"))
         }
+        // Hashear la contraseña antes de insertar
         val hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray())
-        // Insertar datos
-        dao.insertUser(UserEntity(name = name, email = email, password = password))
+        // Insertar datos con la contraseña hasheada
+        dao.insertUser(UserEntity(name = name, email = email, password = hashedPassword))
         return Result.success(Unit)
     }
 
@@ -24,17 +25,18 @@ class UserRepository(private val dao: UserDao) {
             return Result.failure(IllegalArgumentException("Usuario no encontrado"))
         }
 
+        // Verificar con BCrypt (si la contraseña almacenada está hasheada)
+        val isVerifiedByBCrypt = try {
+            BCrypt.verifyer().verify(password.toCharArray(), user.password.toCharArray()).verified
+        } catch (_: Exception) {
+            false
+        }
 
-        val isVerifiedByBCrypt = BCrypt.verifyer().verify(password.toCharArray(), user.password.toCharArray()).verified
-
-
+        // Compatibilidad con contraseñas almacenadas en texto plano (legacy)
         val isVerifiedByPlainText = user.password == password
 
         return when {
-
-            isVerifiedByBCrypt || isVerifiedByPlainText -> {
-                Result.success(user)
-            }
+            isVerifiedByBCrypt || isVerifiedByPlainText -> Result.success(user)
             else -> Result.failure(IllegalArgumentException("Contraseña incorrecta"))
         }
     }

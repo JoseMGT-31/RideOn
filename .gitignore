@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Ignorar archivo con contraseñas para firma
+key.properties
+keystores/
