@@ -27,18 +27,18 @@ import com.example.rideon.viewmodel.Auth
 @Composable
 fun DashboardScreen(
     vm: Auth = viewModel(),
-    onNavigateTo: (String) -> Unit // Callback para navegar a otras rutas
+    onNavigateTo: (String) -> Unit
 ){
     // Obtiene el nombre y el estado de administrador del ViewModel de autenticación
     val userName by vm.userRoleFlow().collectAsState(initial = null)
     val isAdmin by vm.isAdminFlow().collectAsState(initial = false)
 
     // Paleta personalizada: rojo principal, gris oscuro y negro
-    val redPrimary = Color(0xFFD32F2F)       // rojo vivo para elementos destacados
-    val redDark = Color(0xFFB71C1C)          // rojo oscuro para appbar
-    val darkGray = Color(0xFF121212)         // fondo general (casi negro)
-    val cardGray = Color(0xFF1F1F1F)         // tarjetas ligeramente menos oscuras
-    val onDark = Color(0xFFFFFFFF)           // texto sobre fondos oscuros
+    val redPrimary = Color(0xFFD32F2F)
+    val redDark = Color(0xFFB71C1C)
+    val darkGray = Color(0xFF121212)
+    val cardGray = Color(0xFF1F1F1F)
+    val onDark = Color(0xFFFFFFFF)
 
     Scaffold(
         topBar = {
@@ -156,7 +156,7 @@ fun DashboardScreen(
                 if (isAdmin) {
                     Spacer(Modifier.height(8.dp))
                     Button(
-                        onClick = { onNavigateTo("inventarioForm") },
+                        onClick = { onNavigateTo("admin/productos") },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = redDark, contentColor = onDark)
                     ) {

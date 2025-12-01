@@ -21,4 +21,10 @@ object CatalogoStore {
     }
 
     fun byId(id: Int): ProductoUi? = productos.firstOrNull { it.id == id }
+
+    // Eliminar producto por id
+    fun delete(id: Int) {
+        val idx = productos.indexOfFirst { it.id == id }
+        if (idx >= 0) productos.removeAt(idx)
+    }
 }

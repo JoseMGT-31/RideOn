@@ -44,6 +44,9 @@ class InventarioViewModel : ViewModel() {
         )
     }
 
+    // Nuevo helper para inicio de formulario vacío
+    fun clearForm() { form = InventarioForm() }
+
     fun onChange(field: String, value: String) {
         form = when (field) {
             "brand" -> form.copy(brand = value, errors = form.errors - field)
@@ -60,7 +63,7 @@ class InventarioViewModel : ViewModel() {
 
     fun setAbs(v: Boolean) { form = form.copy(abs = v) }
 
-    /** Reglas de validación */
+
     private fun validate(): Boolean {
         val f = form
         val errs = buildMap {
@@ -78,7 +81,7 @@ class InventarioViewModel : ViewModel() {
         return errs.isEmpty()
     }
 
-    /** Guardar: agrega si id == null, si no edita */
+
     fun submit(defaultImageRes: Int, onSaved: (ProductoUi) -> Unit) {
         if (!validate()) return
         val f = form

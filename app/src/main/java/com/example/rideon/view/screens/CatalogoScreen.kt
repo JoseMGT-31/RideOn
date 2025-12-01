@@ -2,7 +2,6 @@ package com.example.rideon.view.screens
 
 import com.example.rideon.model.ProductoUi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,7 +26,7 @@ fun CatalogoScreen(
     onOpen: (ProductoUi) -> Unit,
     onOpenCart: () -> Unit
 ) {
-    val nf = NumberFormat.getCurrencyInstance(Locale("es","CL"))
+    val nf = NumberFormat.getCurrencyInstance(Locale.Builder().setLanguage("es").setRegion("CL").build())
 
     // Paleta
     val redPrimary = Color(0xFFD32F2F)
@@ -57,7 +56,7 @@ fun CatalogoScreen(
                 )
             )
         },
-        // Establecer el color de fondo principal del Scaffold
+
         containerColor = darkGray
     ) { p ->
         LazyColumn(
@@ -94,14 +93,14 @@ fun CatalogoScreen(
                             colors = AssistChipDefaults.assistChipColors(containerColor = redPrimary, labelColor = onDark)
                         )
                     },
-                    // ⭐️ CAMBIO CLAVE: Aplicar el color de fondo de tarjeta al ListItem
+
                     colors = ListItemDefaults.colors(containerColor = cardGray),
                     modifier = Modifier
                         .clickable { onOpen(pdt) }
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
-                // Usamos el mismo color de tarjeta para el divisor para que parezca un solo bloque oscuro.
-                Divider(color = cardGray)
+
+                HorizontalDivider(color = cardGray)
             }
         }
     }

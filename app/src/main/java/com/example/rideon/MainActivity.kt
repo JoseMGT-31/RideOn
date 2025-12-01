@@ -34,6 +34,7 @@ import com.example.rideon.viewmodel.CartViewModel
 import com.example.rideon.view.screens.DashboardScreen
 import com.example.rideon.view.screens.ProfileScreen
 import com.example.rideon.ui.screens.OrderHistoryScreen
+import com.example.rideon.view.screens.AdminProductosScreen
 import com.example.rideon.view.screens.InventarioFormScreen
 import com.example.rideon.viewmodel.InventarioViewModel
 import com.example.rideon.viewmodel.Auth
@@ -175,9 +176,14 @@ fun AppNav() {
                 ProfileScreen()
             }
 
+            // Panel Admin - Productos
+            composable("admin/productos") {
+                AdminProductosScreen(navController = navController)
+            }
+
             // Historial de Órdenes
             composable("history") {
-                OrderHistoryScreen()
+                OrderHistoryScreenView()
             }
 
             // Gestión de Inventario (Ruta para Administradores)
@@ -191,4 +197,9 @@ fun AppNav() {
             }
         }
     }
+}
+
+@Composable
+fun OrderHistoryScreenView() {
+    TODO("Not yet implemented")
 }
